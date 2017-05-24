@@ -19,7 +19,7 @@ From("Hello, World!").To(func(s string) { fmt.Printf("%s\n", s) })
 // Hello, World!
 ```
 
-Pipe a single pair of values to `Printf()`:
+Pipe a single pair of values to `Printf()` (note that the multiple values becomes the input to the next pipeline stage):
 
 ```go
 From("Hello", "World").To(func(greeting, subject string) { fmt.Printf("%s, %s!\n", greeting, subject) })

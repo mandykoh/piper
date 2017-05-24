@@ -89,7 +89,7 @@ From("Hello", []string{ "apple", "pear", "banana" }).
 // Hello, banana!
 ```
 
-Flattening multiple slices/lists produces a Cartesian join. To find all combinations of sizes, colours, and shapes:
+Flattening multiple slices/arrays produces a Cartesian join. To find all combinations of sizes, colours, and shapes:
 
 ```go
 sizes := []string{"small", "large"}

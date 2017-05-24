@@ -50,7 +50,7 @@ FromIndexable([]string{ "apple", "pear", "banana" }).
 // banana
 ```
 
-Get each word and its length using a `Select` projection:
+Get each word and its length using a `Select` projection (note that the return type of the function passed to `Select` becomes the input to the next stage of the pipe):
 
 ```go
 FromIndexable([]string{ "apple", "pear", "banana" }).

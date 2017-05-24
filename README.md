@@ -131,15 +131,15 @@ Make the above more readable by defining helper partial functions:
 
 ```go
 func FullName() func(p Person) string {
-	return func(p Person) string {
-		return p.FirstName + " " + p.LastName
-	}
+  return func(p Person) string {
+    return p.FirstName + " " + p.LastName
+  }
 }
 
 func LengthLessThan(max int) func(s string) bool {
-	return func(s string) bool {
-		return len(s) < max
-	}
+  return func(s string) bool {
+    return len(s) < max
+  }
 }
 
 From([]Person{

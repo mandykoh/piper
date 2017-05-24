@@ -130,10 +130,8 @@ From([]Person{
 Make the above more readable by defining helper partial functions:
 
 ```go
-func FullName() func(p Person) string {
-  return func(p Person) string {
-    return p.FirstName + " " + p.LastName
-  }
+func FullName(p Person) string {
+  return p.FirstName + " " + p.LastName
 }
 
 func LengthLessThan(max int) func(s string) bool {
@@ -148,7 +146,7 @@ From([]Person{
     {FirstName: "Bob", LastName: "Smith"},
   }).
   Flatten().
-  Select(FullName()).
+  Select(FullName).
   Where(LengthLessThan(9)).
   To(func(fullName string) { fmt.Printf("%s\n", fullName) })
 ```

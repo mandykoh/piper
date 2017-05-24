@@ -126,3 +126,29 @@ From([]Person{
 // John Doe
 // Jane Dee
 ```
+
+Make the above more readable by defining helper partial functions:
+
+```go
+func FullName() func(p Person) string {
+	return func(p Person) string {
+		return p.FirstName + " " + p.LastName
+	}
+}
+
+func LengthLessThan(max int) func(s string) bool {
+	return func(s string) bool {
+		return len(s) < max
+	}
+}
+
+From([]Person{
+    {FirstName: "John", LastName: "Doe"},
+    {FirstName: "Jane", LastName: "Dee"},
+    {FirstName: "Bob", LastName: "Smith"},
+  }).
+  Flatten().
+  Select(FullName()).
+  Where(LengthLessThan(9)).
+  To(func(fullName string) { fmt.Printf("%s\n", fullName) })
+```

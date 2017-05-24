@@ -40,6 +40,45 @@ func TestPipeDrainingWithFiltering(t *testing.T) {
 	}
 }
 
+func TestPipeDrainingWithFlattening(t *testing.T) {
+	var results []string
+
+	From([]string{"blue", "red", "green"}, []string{"square", "circle", "triangle"}).
+		Flatten().
+		To(func(color, shape string) { results = append(results, color+" "+shape) })
+
+	if count := len(results); count != 9 {
+		t.Fatalf("Expected 9 elements but got %d", count)
+	}
+	if expected := "blue square"; results[0] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[0])
+	}
+	if expected := "blue circle"; results[1] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[1])
+	}
+	if expected := "blue triangle"; results[2] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[2])
+	}
+	if expected := "red square"; results[3] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[3])
+	}
+	if expected := "red circle"; results[4] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[4])
+	}
+	if expected := "red triangle"; results[5] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[5])
+	}
+	if expected := "green square"; results[6] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[6])
+	}
+	if expected := "green circle"; results[7] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[7])
+	}
+	if expected := "green triangle"; results[8] != expected {
+		t.Errorf("Expected %v but got %v", expected, results[8])
+	}
+}
+
 func TestPipeDrainingWithProjection(t *testing.T) {
 	var results1 []int
 	var results2 []int

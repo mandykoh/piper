@@ -6,6 +6,10 @@ type Pipe struct {
 	Source Source
 }
 
+func (p Pipe) Flatten() Pipe {
+	return Pipe{Source: &flatteningSource{source: p.Source}}
+}
+
 func (p Pipe) Select(projection interface{}) Pipe {
 	return Pipe{Source: projectedSource{source: p.Source, projection: reflect.ValueOf(projection)}}
 }

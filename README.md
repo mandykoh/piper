@@ -37,10 +37,10 @@ From("Hello", "World").To(func(greeting, subject string) { fmt.Printf("%s, %s!\n
 // Hello, World!
 ```
 
-Stream a few values from a slice to `Printf()`:
+Stream a few values from a slice to `Println()`:
 
 ```go
-FromIndexable([]string{ "apple", "pear", "banana" }).To(func(s string) { fmt.Printf("%s\n", s) })
+FromIndexable([]string{ "apple", "pear", "banana" }).To(fmt.Println)
 
 // Outputs:
 // apple
@@ -53,7 +53,7 @@ Exclude words containing the letter `e` using a `Where` filter:
 ```go
 FromIndexable([]string{ "apple", "pear", "banana" }).
   Where(func(s string) bool { return !strings.Contains(s, "e") }).
-  To(func(s string) { fmt.Printf("%s\n", s) })
+  To(fmt.Println)
 
 // Outputs:
 // banana
@@ -77,7 +77,7 @@ Turn a single slice or array value (eg a slice of words) into multiple values (e
 ```go
 From([]string{ "apple", "pear", "banana" }).
   Flatten().
-  To(func(s string) { fmt.Printf("%s\n", s) })
+  To(fmt.Println)
 
 // Outputs:
 // apple
@@ -129,7 +129,7 @@ From([]Person{
   Flatten().
   Select(func(p Person) string { return p.FirstName + " " + p.LastName }).
   Where(func(fullName string) bool { return len(fullName) < 9 }).
-  To(func(fullName string) { fmt.Printf("%s\n", fullName) })
+  To(fmt.Println)
 
 // Outputs the full names that are less than 9 characters long:
 // John Doe
@@ -157,5 +157,5 @@ From([]Person{
   Flatten().
   Select(FullName).
   Where(LengthLessThan(9)).
-  To(func(fullName string) { fmt.Printf("%s\n", fullName) })
+  To(fmt.Println)
 ```

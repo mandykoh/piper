@@ -3,7 +3,7 @@ Go library for lazily-evaluated pipeline processing.
 
 ## Introduction
 
-Piper uses constructs inspired by [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) to make it easy to construct lazily-evaluated, pipeline style processing code.
+Piper uses constructs inspired by [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) to make it easy to build lazily-evaluated, pipeline style processing code.
 
 As Go doesn’t have generics, Piper is reflection based, and thus loses some static type checking/inference to do what it does.
 

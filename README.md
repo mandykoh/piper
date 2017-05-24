@@ -10,6 +10,15 @@ As Go doesn’t have generics, Piper is reflection based, and thus loses some st
 
 ## Examples
 
+Trivially pipe a single value to `Println()`:
+
+```go
+From("Hello, World!").To(fmt.Println)
+
+// Outputs:
+// Hello, World!
+```
+
 Pipe a single value to `Printf()`:
 
 ```go

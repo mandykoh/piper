@@ -18,8 +18,3 @@ func (m *many) Source() ([]reflect.Value, Source) {
 
 	return nil, nil
 }
-
-func FromMany(items interface{}) Pipe {
-	m := &many{items: reflect.ValueOf(items)}
-	return From(m.Source)
-}

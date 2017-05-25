@@ -41,3 +41,17 @@ func (p Pipe) Where(predicate interface{}) Pipe {
 	f := filter{source: p.Source, test: reflect.ValueOf(predicate)}
 	return Pipe{Source: f.Source}
 }
+
+func FromMany(items interface{}) Pipe {
+	m := &many{items: reflect.ValueOf(items)}
+	return fromSource(m.Source)
+}
+
+func FromSingle(itemValues ...interface{}) Pipe {
+	s := &single{values: itemValues}
+	return fromSource(s.Source)
+}
+
+func fromSource(s Source) Pipe {
+	return Pipe{Source: s}
+}

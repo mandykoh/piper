@@ -15,6 +15,8 @@ func (s filteredSource) Next() (values []reflect.Value, ok bool) {
 			return
 		}
 
+		convertToRuntimeTypes(values)
+
 		filterResult := s.filter.Call(values)
 		if filterResult[0].Bool() {
 			return

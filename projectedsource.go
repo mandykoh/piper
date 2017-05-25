@@ -3,21 +3,25 @@ package piper
 import "reflect"
 
 type projectedSource struct {
-	source     Source
-	projection reflect.Value
+	source      Source
+	projections []reflect.Value
 }
 
-func (s projectedSource) Next() (values []reflect.Value, ok bool) {
+func (s projectedSource) Next() ([]reflect.Value, bool) {
 
-	values, ok = s.source.Next()
+	values, ok := s.source.Next()
 	if !ok {
-		return
+		return nil, false
 	}
 
 	for i := 0; i < len(values); i++ {
 		values[i] = reflect.ValueOf(values[i].Interface())
 	}
 
-	values = s.projection.Call(values)
-	return
+	var results []reflect.Value
+	for _, p := range s.projections {
+		results = append(results, p.Call(values)...)
+	}
+
+	return results, true
 }

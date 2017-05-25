@@ -10,9 +10,11 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 	s := flatteningSource{
 		source: projectedSource{
 			source: &indexableSource{indexable: reflect.ValueOf([]string{"dummy"})},
-			projection: reflect.ValueOf(func(v string) ([]string, string, []string) {
-				return []string{"1", "2"}, "x", []string{"a", "b"}
-			}),
+			projections: []reflect.Value{
+				reflect.ValueOf(func(v string) ([]string, string, []string) {
+					return []string{"1", "2"}, "x", []string{"a", "b"}
+				}),
+			},
 		},
 	}
 
@@ -143,7 +145,7 @@ func TestFlatteningSourceUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
 				[]string{"a", "b"},
 				[]string{"c", "d"},
 			})},
-			projection: reflect.ValueOf(func(x []string) interface{} { return x }),
+			projections: []reflect.Value{reflect.ValueOf(func(x []string) interface{} { return x })},
 		},
 	}
 

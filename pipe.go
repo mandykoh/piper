@@ -10,8 +10,13 @@ func (p Pipe) Flatten() Pipe {
 	return Pipe{Source: &flatteningSource{source: p.Source}}
 }
 
-func (p Pipe) Select(projection interface{}) Pipe {
-	return Pipe{Source: projectedSource{source: p.Source, projection: reflect.ValueOf(projection)}}
+func (p Pipe) Select(projections ...interface{}) Pipe {
+	projectionFuncs := make([]reflect.Value, len(projections))
+	for i, projection := range projections {
+		projectionFuncs[i] = reflect.ValueOf(projection)
+	}
+
+	return Pipe{Source: projectedSource{source: p.Source, projections: projectionFuncs}}
 }
 
 func (p Pipe) To(sink interface{}) {

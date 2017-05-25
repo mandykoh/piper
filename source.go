@@ -2,6 +2,4 @@ package piper
 
 import "reflect"
 
-type Source interface {
-	Next() (values []reflect.Value, ok bool)
-}
+type Source func() (values []reflect.Value, restOrEnd Source)

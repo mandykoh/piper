@@ -7,7 +7,8 @@ type Pipe struct {
 }
 
 func (p Pipe) Flatten() Pipe {
-	return Pipe{Source: &flatteningSource{source: p.Source}}
+	f := &flatten{source: p.Source}
+	return Pipe{Source: f.Source}
 }
 
 func (p Pipe) Select(projections ...interface{}) Pipe {
@@ -16,15 +17,18 @@ func (p Pipe) Select(projections ...interface{}) Pipe {
 		projectionFuncs[i] = reflect.ValueOf(projection)
 	}
 
-	return Pipe{Source: projectedSource{source: p.Source, projections: projectionFuncs}}
+	proj := projector{source: p.Source, projections: projectionFuncs}
+	return Pipe{Source: proj.Source}
 }
 
 func (p Pipe) To(sink interface{}) {
 	sinkFunc := reflect.ValueOf(sink)
 
 	for {
-		values, ok := p.Source.Next()
-		if !ok {
+		var values []reflect.Value
+
+		values, p.Source = p.Source()
+		if p.Source == nil {
 			break
 		}
 
@@ -33,6 +37,7 @@ func (p Pipe) To(sink interface{}) {
 	}
 }
 
-func (p Pipe) Where(filter interface{}) Pipe {
-	return Pipe{Source: filteredSource{source: p.Source, filter: reflect.ValueOf(filter)}}
+func (p Pipe) Where(predicate interface{}) Pipe {
+	f := filter{source: p.Source, test: reflect.ValueOf(predicate)}
+	return Pipe{Source: f.Source}
 }

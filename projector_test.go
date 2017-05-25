@@ -7,17 +7,21 @@ import (
 )
 
 func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing.T) {
-	s := projectedSource{
-		source: &indexableSource{indexable: reflect.ValueOf([]interface{}{"a", "b"})},
+	indexable := &indexable{items: reflect.ValueOf([]interface{}{"a", "b"})}
+	projector := &projector{
+		source: indexable.Source,
 		projections: []reflect.Value{
 			reflect.ValueOf(func(x string) (string, int) { return strings.ToUpper(x), 1 }),
 			reflect.ValueOf(func(x string) (string, int) { return x + x, 2 }),
 		},
 	}
 
-	result, ok := s.Next()
+	var s Source = projector.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if count := len(result); count != 4 {
@@ -36,9 +40,9 @@ func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing
 		t.Fatalf("Expected element 2 but got %v", result[1])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if count := len(result); count != 4 {
@@ -59,94 +63,106 @@ func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing
 }
 
 func TestProjectedSourcePassesArgumentsUsingRuntimeType(t *testing.T) {
-	s := projectedSource{
-		source:      &indexableSource{indexable: reflect.ValueOf([]interface{}{"a", "b", "c"})},
+	indexable := &indexable{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
+	projector := projector{
+		source:      indexable.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
-	result, ok := s.Next()
+	var s Source = projector.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "A" {
 		t.Fatalf("Expected element 'A' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "B" {
 		t.Fatalf("Expected element 'B' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "C" {
 		t.Fatalf("Expected element 'C' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
 
 func TestProjectedSourceReturnsTransformedElements(t *testing.T) {
-	s := projectedSource{
-		source:      &indexableSource{indexable: reflect.ValueOf([]string{"a", "b", "c"})},
+	indexable := &indexable{items: reflect.ValueOf([]string{"a", "b", "c"})}
+	projector := projector{
+		source:      indexable.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
-	result, ok := s.Next()
+	var s Source = projector.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "A" {
 		t.Fatalf("Expected element 'A' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "B" {
 		t.Fatalf("Expected element 'B' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "C" {
 		t.Fatalf("Expected element 'C' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
 
 func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
-	s := projectedSource{
-		source:      &indexableSource{indexable: reflect.ValueOf([]string{"a", "b", "c"})},
+	indexable := &indexable{items: reflect.ValueOf([]string{"a", "b", "c"})}
+	projector := &projector{
+		source:      indexable.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) (string, string) { return strings.ToUpper(x), x + "X" })},
 	}
 
-	result, ok := s.Next()
+	var s Source = projector.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "A" {
@@ -156,9 +172,9 @@ func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
 		t.Fatalf("Expected element 'aX' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "B" {
@@ -168,9 +184,9 @@ func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
 		t.Fatalf("Expected element 'bX' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "C" {
@@ -180,9 +196,9 @@ func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
 		t.Fatalf("Expected element 'cX' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }

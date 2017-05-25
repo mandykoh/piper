@@ -6,38 +6,41 @@ import (
 )
 
 func TestIndexableSourceReturnsElementsFromSlice(t *testing.T) {
-	s := indexableSource{indexable: reflect.ValueOf([...]string{"a", "b", "c"})}
+	indexable := &indexable{items: reflect.ValueOf([...]string{"a", "b", "c"})}
 
-	result, ok := s.Next()
+	var s Source = indexable.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "a" {
 		t.Fatalf("Expected element 'a' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "b" {
 		t.Fatalf("Expected element 'b' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "c" {
 		t.Fatalf("Expected element 'c' but got %v", result)
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }

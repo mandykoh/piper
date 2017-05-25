@@ -6,21 +6,23 @@ import (
 )
 
 func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.T) {
-
-	s := flatteningSource{
-		source: projectedSource{
-			source: &indexableSource{indexable: reflect.ValueOf([]string{"dummy"})},
-			projections: []reflect.Value{
-				reflect.ValueOf(func(v string) ([]string, string, []string) {
-					return []string{"1", "2"}, "x", []string{"a", "b"}
-				}),
-			},
+	indexable := &indexable{items: reflect.ValueOf([]string{"dummy"})}
+	projector := projector{
+		source: indexable.Source,
+		projections: []reflect.Value{
+			reflect.ValueOf(func(v string) ([]string, string, []string) {
+				return []string{"1", "2"}, "x", []string{"a", "b"}
+			}),
 		},
 	}
+	flattener := &flatten{source: projector.Source}
 
-	result, ok := s.Next()
+	var s Source = flattener.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "1" {
@@ -33,9 +35,9 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 		t.Errorf("Expected element 'a' but got %v", result[2])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "1" {
@@ -48,9 +50,9 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 		t.Errorf("Expected element 'b' but got %v", result[2])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "2" {
@@ -63,9 +65,9 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 		t.Errorf("Expected element 'a' but got %v", result[2])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a fourth element but none come next")
 	}
 	if result[0].String() != "2" {
@@ -78,116 +80,119 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 		t.Errorf("Expected element 'b' but got %v", result[2])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
 
 func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
+	indexable := &indexable{items: reflect.ValueOf([][]string{
+		[]string{"a", "b"},
+		[]string{"c", "d"},
+	})}
+	flattener := &flatten{source: indexable.Source}
 
-	s := flatteningSource{
-		source: &indexableSource{indexable: reflect.ValueOf([][]string{
-			[]string{"a", "b"},
-			[]string{"c", "d"},
-		})},
-	}
+	var s Source = flattener.Source
+	var result []reflect.Value
 
-	result, ok := s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "a" {
 		t.Errorf("Expected element 'a' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "b" {
 		t.Errorf("Expected element 'b' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "c" {
 		t.Errorf("Expected element 'c' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a fourth element but none come next")
 	}
 	if result[0].String() != "d" {
 		t.Errorf("Expected element 'd' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
 
 func TestFlatteningSourceUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
-
-	s := flatteningSource{
-		source: projectedSource{
-			source: &indexableSource{indexable: reflect.ValueOf([][]string{
-				[]string{"a", "b"},
-				[]string{"c", "d"},
-			})},
-			projections: []reflect.Value{reflect.ValueOf(func(x []string) interface{} { return x })},
-		},
+	indexable := &indexable{items: reflect.ValueOf([][]string{
+		[]string{"a", "b"},
+		[]string{"c", "d"},
+	})}
+	projector := projector{
+		source:      indexable.Source,
+		projections: []reflect.Value{reflect.ValueOf(func(x []string) interface{} { return x })},
 	}
+	flattener := &flatten{source: projector.Source}
 
-	result, ok := s.Next()
+	var s Source = flattener.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "a" {
 		t.Errorf("Expected element 'a' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a second element but none come next")
 	}
 	if result[0].String() != "b" {
 		t.Errorf("Expected element 'b' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a third element but none come next")
 	}
 	if result[0].String() != "c" {
 		t.Errorf("Expected element 'c' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if !ok {
+	if s == nil {
 		t.Fatal("Expected a fourth element but none come next")
 	}
 	if result[0].String() != "d" {
 		t.Errorf("Expected element 'd' but got %v", result[0])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }

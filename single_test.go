@@ -1,13 +1,19 @@
 package piper
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestSingleItemSourceReturnsValuesForOneItem(t *testing.T) {
-	s := singleItemSource{values: []interface{}{"a", 1}}
+	single := &single{values: []interface{}{"a", 1}}
 
-	result, ok := s.Next()
+	var s Source = single.Source
+	var result []reflect.Value
 
-	if !ok {
+	result, s = s()
+
+	if s == nil {
 		t.Fatal("Expected an element but none come next")
 	}
 	if result[0].String() != "a" {
@@ -17,9 +23,9 @@ func TestSingleItemSourceReturnsValuesForOneItem(t *testing.T) {
 		t.Fatalf("Expected element 1 but got %v", result[1])
 	}
 
-	result, ok = s.Next()
+	result, s = s()
 
-	if ok {
+	if s != nil {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }

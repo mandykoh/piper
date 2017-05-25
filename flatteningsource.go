@@ -72,6 +72,8 @@ func (s *flatteningSource) resetIndexables(values []reflect.Value) {
 	s.indexablePositions = nil
 
 	for i := 0; i < len(values); i++ {
+		values[i] = reflect.ValueOf(values[i].Interface())
+
 		switch values[i].Kind() {
 		case reflect.Array, reflect.Slice:
 			s.indexables = append(s.indexables, values[i])

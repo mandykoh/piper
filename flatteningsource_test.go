@@ -134,3 +134,58 @@ func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
 		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
+
+func TestFlatteningSourceUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
+
+	s := flatteningSource{
+		source: projectedSource{
+			source: &indexableSource{indexable: reflect.ValueOf([][]string{
+				[]string{"a", "b"},
+				[]string{"c", "d"},
+			})},
+			projection: reflect.ValueOf(func(x []string) interface{} { return x }),
+		},
+	}
+
+	result, ok := s.Next()
+
+	if !ok {
+		t.Fatal("Expected an element but none come next")
+	}
+	if result[0].String() != "a" {
+		t.Errorf("Expected element 'a' but got %v", result[0])
+	}
+
+	result, ok = s.Next()
+
+	if !ok {
+		t.Fatal("Expected a second element but none come next")
+	}
+	if result[0].String() != "b" {
+		t.Errorf("Expected element 'b' but got %v", result[0])
+	}
+
+	result, ok = s.Next()
+
+	if !ok {
+		t.Fatal("Expected a third element but none come next")
+	}
+	if result[0].String() != "c" {
+		t.Errorf("Expected element 'c' but got %v", result[0])
+	}
+
+	result, ok = s.Next()
+
+	if !ok {
+		t.Fatal("Expected a fourth element but none come next")
+	}
+	if result[0].String() != "d" {
+		t.Errorf("Expected element 'd' but got %v", result[0])
+	}
+
+	result, ok = s.Next()
+
+	if ok {
+		t.Fatalf("Expected no more elements but got %v", result)
+	}
+}

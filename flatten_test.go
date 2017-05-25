@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.T) {
+func TestFlattenFormsCartesianProductOfMultipleReturnValues(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]string{"dummy"})}
 	projector := projector{
 		source: many.Source,
@@ -87,7 +87,7 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 	}
 }
 
-func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
+func TestFlattenUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
 	many := &many{items: reflect.ValueOf([][]string{
 		[]string{"a", "b"},
 		[]string{"c", "d"},
@@ -140,7 +140,7 @@ func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
 	}
 }
 
-func TestFlatteningSourceUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
+func TestFlattenUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
 	many := &many{items: reflect.ValueOf([][]string{
 		[]string{"a", "b"},
 		[]string{"c", "d"},

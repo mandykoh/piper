@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing.T) {
+func TestProjectorCombinesValuesReturnedFromMultipleProjections(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]interface{}{"a", "b"})}
 	projector := &projector{
 		source: many.Source,
@@ -62,7 +62,7 @@ func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing
 	}
 }
 
-func TestProjectedSourcePassesArgumentsUsingRuntimeType(t *testing.T) {
+func TestProjectorPassesArgumentsUsingRuntimeType(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
 	projector := projector{
 		source:      many.Source,
@@ -106,7 +106,7 @@ func TestProjectedSourcePassesArgumentsUsingRuntimeType(t *testing.T) {
 	}
 }
 
-func TestProjectedSourceReturnsTransformedElements(t *testing.T) {
+func TestProjectorReturnsTransformedElements(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]string{"a", "b", "c"})}
 	projector := projector{
 		source:      many.Source,
@@ -150,7 +150,7 @@ func TestProjectedSourceReturnsTransformedElements(t *testing.T) {
 	}
 }
 
-func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
+func TestProjectorSupportsMultipleReturnValues(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]string{"a", "b", "c"})}
 	projector := &projector{
 		source:      many.Source,

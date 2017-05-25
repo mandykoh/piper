@@ -31,7 +31,7 @@ func TestFilterExcludesFilteredElements(t *testing.T) {
 	}
 }
 
-func TestFilteredSourceUsesRuntimeTypeOfElement(t *testing.T) {
+func TestFilterUsesRuntimeTypeOfElement(t *testing.T) {
 	many := &many{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
 	f := filter{
 		source: many.Source,

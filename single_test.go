@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSingleItemSourceReturnsValuesForOneItem(t *testing.T) {
+func TestSingleReturnsValuesForOneItem(t *testing.T) {
 	single := &single{values: []interface{}{"a", 1}}
 
 	var s Source = single.Source

@@ -26,39 +26,50 @@ func (s *flatteningSource) Next() ([]reflect.Value, bool) {
 	}
 }
 
-func (s *flatteningSource) nextValuesFromIndexables() (values []reflect.Value, ok bool) {
+func (s *flatteningSource) incrementIndexables() {
 
-	if s.indexables == nil {
+	if len(s.indexables) > 0 {
+		for i := len(s.indexables) - 1; ; {
+			s.indexes[i]++
+			if s.indexes[i] >= s.indexables[i].Len() {
+				s.indexes[i] = 0
+				i--
+				if i < 0 {
+					s.currentValues = nil
+					break
+				}
+			} else {
+				break
+			}
+		}
+	} else {
+		s.currentValues = nil
+	}
+}
+
+func (s *flatteningSource) nextValuesFromIndexables() ([]reflect.Value, bool) {
+
+	if s.currentValues == nil {
 		return nil, false
 	}
 
+	values := s.currentValues
+
 	for i := 0; i < len(s.indexables); i++ {
 		value := s.indexables[i].Index(s.indexes[i])
-		s.currentValues[s.indexablePositions[i]] = value
+		values[s.indexablePositions[i]] = value
 	}
 
-	for i := len(s.indexables) - 1; ; {
-		s.indexes[i]++
-		if s.indexes[i] >= s.indexables[i].Len() {
-			s.indexes[i] = 0
-			i--
-			if i < 0 {
-				s.indexables = nil
-				break
-			}
-		} else {
-			break
-		}
-	}
+	s.incrementIndexables()
 
-	return s.currentValues, true
+	return values, true
 }
 
 func (s *flatteningSource) resetIndexables(values []reflect.Value) {
 	s.currentValues = values
 
-	s.indexables = []reflect.Value{}
-	s.indexablePositions = []int{}
+	s.indexables = nil
+	s.indexablePositions = nil
 
 	for i := 0; i < len(values); i++ {
 		switch values[i].Kind() {

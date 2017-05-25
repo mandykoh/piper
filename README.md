@@ -72,6 +72,19 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).
 // String: banana, Length: 6
 ```
 
+Decode a base64-encoded string using a `Select` projection with multiple return values:
+
+```go
+piper.From("SGVsbG8sIFdvcmxkIQ==").
+  Select(base64.StdEncoding.DecodeString).
+  Where(func(decoded []byte, err error) bool { return err == nil }).
+  Select(func(decoded []byte, err error) string { return string(decoded) }).
+  To(fmt.Println)
+
+// Outputs:
+// Hello, World!
+```
+
 Get the upper and lower case version of each word using multiple projections with one `Select`:
 
 ```go
@@ -171,4 +184,22 @@ piper.From([]Person{
   Select(FullName).
   Where(LengthLessThan(9)).
   To(fmt.Println)
+```
+
+Parse some JSON using a helper function:
+
+```go
+func jsonProperty(name string) func(map[string]interface{}) interface{} {
+  return func(jsonObject map[string]interface{}) interface{} {
+    return jsonObject[name]
+  }
+}
+
+piper.From(jsonData).
+  Select(jsonProperty("items")).
+  Flatten().
+  Select(jsonProperty("id"), jsonProperty("url")).
+  To(func(id, url string) {
+    fmt.Printf("%s: %s\n", id, url)
+  })
 ```

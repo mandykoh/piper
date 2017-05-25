@@ -22,7 +22,7 @@ func (s *single) Source() ([]reflect.Value, Source) {
 	return values, s.Source
 }
 
-func From(itemValues ...interface{}) Pipe {
+func FromSingle(itemValues ...interface{}) Pipe {
 	s := &single{values: itemValues}
 	return Pipe{Source: s.Source}
 }

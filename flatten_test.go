@@ -6,9 +6,9 @@ import (
 )
 
 func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]string{"dummy"})}
+	many := &many{items: reflect.ValueOf([]string{"dummy"})}
 	projector := projector{
-		source: indexable.Source,
+		source: many.Source,
 		projections: []reflect.Value{
 			reflect.ValueOf(func(v string) ([]string, string, []string) {
 				return []string{"1", "2"}, "x", []string{"a", "b"}
@@ -88,11 +88,11 @@ func TestFlatteningSourceFormsCartesianProductOfMultipleReturnValues(t *testing.
 }
 
 func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([][]string{
+	many := &many{items: reflect.ValueOf([][]string{
 		[]string{"a", "b"},
 		[]string{"c", "d"},
 	})}
-	flattener := &flatten{source: indexable.Source}
+	flattener := &flatten{source: many.Source}
 
 	var s Source = flattener.Source
 	var result []reflect.Value
@@ -141,12 +141,12 @@ func TestFlatteningSourceUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
 }
 
 func TestFlatteningSourceUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([][]string{
+	many := &many{items: reflect.ValueOf([][]string{
 		[]string{"a", "b"},
 		[]string{"c", "d"},
 	})}
 	projector := projector{
-		source:      indexable.Source,
+		source:      many.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x []string) interface{} { return x })},
 	}
 	flattener := &flatten{source: projector.Source}

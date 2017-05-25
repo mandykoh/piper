@@ -7,9 +7,9 @@ import (
 )
 
 func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]interface{}{"a", "b"})}
+	many := &many{items: reflect.ValueOf([]interface{}{"a", "b"})}
 	projector := &projector{
-		source: indexable.Source,
+		source: many.Source,
 		projections: []reflect.Value{
 			reflect.ValueOf(func(x string) (string, int) { return strings.ToUpper(x), 1 }),
 			reflect.ValueOf(func(x string) (string, int) { return x + x, 2 }),
@@ -63,9 +63,9 @@ func TestProjectedSourceCombinesValuesReturnedFromMultipleProjections(t *testing
 }
 
 func TestProjectedSourcePassesArgumentsUsingRuntimeType(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
+	many := &many{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
 	projector := projector{
-		source:      indexable.Source,
+		source:      many.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
@@ -107,9 +107,9 @@ func TestProjectedSourcePassesArgumentsUsingRuntimeType(t *testing.T) {
 }
 
 func TestProjectedSourceReturnsTransformedElements(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]string{"a", "b", "c"})}
+	many := &many{items: reflect.ValueOf([]string{"a", "b", "c"})}
 	projector := projector{
-		source:      indexable.Source,
+		source:      many.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
@@ -151,9 +151,9 @@ func TestProjectedSourceReturnsTransformedElements(t *testing.T) {
 }
 
 func TestProjectedSourceSupportsMultipleReturnValues(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]string{"a", "b", "c"})}
+	many := &many{items: reflect.ValueOf([]string{"a", "b", "c"})}
 	projector := &projector{
-		source:      indexable.Source,
+		source:      many.Source,
 		projections: []reflect.Value{reflect.ValueOf(func(x string) (string, string) { return strings.ToUpper(x), x + "X" })},
 	}
 

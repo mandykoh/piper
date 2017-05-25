@@ -5,10 +5,10 @@ import (
 	"testing"
 )
 
-func TestIndexableSourceReturnsElementsFromSlice(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([...]string{"a", "b", "c"})}
+func TestManyReturnsElementsFromSlice(t *testing.T) {
+	many := &many{items: reflect.ValueOf([...]string{"a", "b", "c"})}
 
-	var s Source = indexable.Source
+	var s Source = many.Source
 	var result []reflect.Value
 
 	result, s = s()

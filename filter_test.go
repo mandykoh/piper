@@ -6,9 +6,9 @@ import (
 )
 
 func TestFilterExcludesFilteredElements(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]string{"a", "b", "c"})}
+	many := &many{items: reflect.ValueOf([]string{"a", "b", "c"})}
 	f := filter{
-		source: indexable.Source,
+		source: many.Source,
 		test:   reflect.ValueOf(func(x string) bool { return x == "b" }),
 	}
 
@@ -32,9 +32,9 @@ func TestFilterExcludesFilteredElements(t *testing.T) {
 }
 
 func TestFilteredSourceUsesRuntimeTypeOfElement(t *testing.T) {
-	indexable := &indexable{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
+	many := &many{items: reflect.ValueOf([]interface{}{"a", "b", "c"})}
 	f := filter{
-		source: indexable.Source,
+		source: many.Source,
 		test:   reflect.ValueOf(func(x string) bool { return x == "b" }),
 	}
 

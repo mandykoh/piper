@@ -5,7 +5,7 @@ import "testing"
 func TestPipeDraining(t *testing.T) {
 	var results []string
 
-	FromIndexable([]string{"a", "b", "c"}).
+	FromMany([]string{"a", "b", "c"}).
 		To(func(v string) { results = append(results, v) })
 
 	if count := len(results); count != 3 {
@@ -25,7 +25,7 @@ func TestPipeDraining(t *testing.T) {
 func TestPipeDrainingWithFiltering(t *testing.T) {
 	var results []string
 
-	FromIndexable([]string{"a", "b", "c"}).
+	FromMany([]string{"a", "b", "c"}).
 		Where(func(v string) bool { return v != "b" }).
 		To(func(v string) { results = append(results, v) })
 
@@ -43,7 +43,7 @@ func TestPipeDrainingWithFiltering(t *testing.T) {
 func TestPipeDrainingWithFlattening(t *testing.T) {
 	var results []string
 
-	From([]string{"blue", "red", "green"}, []string{"square", "circle", "triangle"}).
+	FromSingle([]string{"blue", "red", "green"}, []string{"square", "circle", "triangle"}).
 		Flatten().
 		To(func(color, shape string) { results = append(results, color+" "+shape) })
 
@@ -83,7 +83,7 @@ func TestPipeDrainingWithProjection(t *testing.T) {
 	var results1 []int
 	var results2 []int
 
-	FromIndexable([]int{1, 2, 3}).
+	FromMany([]int{1, 2, 3}).
 		Select(func(n int) (int, int) { return n, n * 2 }).
 		To(func(n1, n2 int) { results1 = append(results1, n1); results2 = append(results2, n2) })
 

@@ -16,7 +16,7 @@ func TestProjectorCombinesValuesReturnedFromMultipleProjections(t *testing.T) {
 		},
 	}
 
-	var s Source = projector.Source
+	var s WrappedSource = projector.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -69,7 +69,7 @@ func TestProjectorPassesArgumentsUsingRuntimeType(t *testing.T) {
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
-	var s Source = projector.Source
+	var s WrappedSource = projector.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -113,7 +113,7 @@ func TestProjectorReturnsTransformedElements(t *testing.T) {
 		projections: []reflect.Value{reflect.ValueOf(func(x string) string { return strings.ToUpper(x) })},
 	}
 
-	var s Source = projector.Source
+	var s WrappedSource = projector.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -157,7 +157,7 @@ func TestProjectorSupportsMultipleReturnValues(t *testing.T) {
 		projections: []reflect.Value{reflect.ValueOf(func(x string) (string, string) { return strings.ToUpper(x), x + "X" })},
 	}
 
-	var s Source = projector.Source
+	var s WrappedSource = projector.Source
 	var result []reflect.Value
 
 	result, s = s()

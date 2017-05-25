@@ -3,14 +3,14 @@ package piper
 import "reflect"
 
 type flatten struct {
-	source             Source
+	source             WrappedSource
 	currentValues      []reflect.Value
 	indexables         []reflect.Value
 	indexablePositions []int
 	indexes            []int
 }
 
-func (f *flatten) Source() ([]reflect.Value, Source) {
+func (f *flatten) Source() ([]reflect.Value, WrappedSource) {
 	for {
 		values, ok := f.nextValuesFromIndexables()
 		if ok {

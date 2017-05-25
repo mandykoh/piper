@@ -2,6 +2,28 @@ package piper
 
 import "testing"
 
+func TestPipeCreationUsingCustomFunction(t *testing.T) {
+	var results []int
+
+	From(countDown(3)).To(func(n int) { results = append(results, n) })
+
+	if count := len(results); count != 4 {
+		t.Fatalf("Expected 4 elements but got %d", count)
+	}
+	if results[0] != 3 {
+		t.Errorf("Expected element 3 but got %v", results[0])
+	}
+	if results[1] != 2 {
+		t.Errorf("Expected element 2 but got %v", results[1])
+	}
+	if results[2] != 1 {
+		t.Errorf("Expected element 1 but got %v", results[2])
+	}
+	if results[3] != 0 {
+		t.Errorf("Expected element 0 but got %v", results[3])
+	}
+}
+
 func TestPipeDraining(t *testing.T) {
 	var results []string
 
@@ -111,5 +133,16 @@ func TestPipeDrainingWithProjection(t *testing.T) {
 	}
 	if results2[2] != 6 {
 		t.Errorf("Expected element 6 but got %v", results2[2])
+	}
+}
+
+type CountDownSource func() (value int, restOrEnd CountDownSource)
+
+func countDown(n int) CountDownSource {
+	return func() (int, CountDownSource) {
+		if n < 0 {
+			return 0, nil
+		}
+		return n, countDown(n - 1)
 	}
 }

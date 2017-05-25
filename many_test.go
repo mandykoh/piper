@@ -8,7 +8,7 @@ import (
 func TestManyReturnsElementsFromSlice(t *testing.T) {
 	many := &many{items: reflect.ValueOf([...]string{"a", "b", "c"})}
 
-	var s Source = many.Source
+	var s WrappedSource = many.Source
 	var result []reflect.Value
 
 	result, s = s()

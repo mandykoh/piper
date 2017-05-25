@@ -7,7 +7,7 @@ type many struct {
 	offset int
 }
 
-func (m *many) Source() ([]reflect.Value, Source) {
+func (m *many) Source() ([]reflect.Value, WrappedSource) {
 	var values []reflect.Value
 
 	if m.offset < m.items.Len() {

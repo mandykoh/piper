@@ -3,11 +3,11 @@ package piper
 import "reflect"
 
 type projector struct {
-	source      Source
+	source      WrappedSource
 	projections []reflect.Value
 }
 
-func (p projector) Source() ([]reflect.Value, Source) {
+func (p projector) Source() ([]reflect.Value, WrappedSource) {
 	var values []reflect.Value
 
 	values, p.source = p.source()

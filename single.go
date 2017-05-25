@@ -7,7 +7,7 @@ type single struct {
 	done   bool
 }
 
-func (s *single) Source() ([]reflect.Value, Source) {
+func (s *single) Source() ([]reflect.Value, WrappedSource) {
 	if s.done {
 		return nil, nil
 	}

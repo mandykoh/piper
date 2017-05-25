@@ -3,11 +3,11 @@ package piper
 import "reflect"
 
 type filter struct {
-	source Source
+	source WrappedSource
 	test   reflect.Value
 }
 
-func (f filter) Source() ([]reflect.Value, Source) {
+func (f filter) Source() ([]reflect.Value, WrappedSource) {
 
 	for {
 		var values []reflect.Value

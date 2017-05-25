@@ -8,7 +8,7 @@ import (
 func TestSingleReturnsValuesForOneItem(t *testing.T) {
 	single := &single{values: []interface{}{"a", 1}}
 
-	var s Source = single.Source
+	var s WrappedSource = single.Source
 	var result []reflect.Value
 
 	result, s = s()

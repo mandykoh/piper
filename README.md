@@ -48,6 +48,29 @@ piper.FromMany([]string{ "apple", "pear", "banana" }).To(fmt.Println)
 // banana
 ```
 
+Stream values from a custom source function:
+
+```go
+type CountDownSource func() (value int, restOrEnd CountDownSource)
+
+func countDown(n int) CountDownSource {
+  return func() (int, CountDownSource) {
+    if n < 0 {
+      return 0, nil
+    }
+    return n, countDown(n - 1)
+  }
+}
+
+piper.From(countDown(3)).To(fmt.Println)
+
+// Outputs:
+// 3
+// 2
+// 1
+// 0
+```
+
 Exclude words containing the letter `e` using a `Where` filter:
 
 ```go

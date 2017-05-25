@@ -12,7 +12,7 @@ func TestFilterExcludesFilteredElements(t *testing.T) {
 		test:   reflect.ValueOf(func(x string) bool { return x == "b" }),
 	}
 
-	var s Source = f.Source
+	var s WrappedSource = f.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -38,7 +38,7 @@ func TestFilterUsesRuntimeTypeOfElement(t *testing.T) {
 		test:   reflect.ValueOf(func(x string) bool { return x == "b" }),
 	}
 
-	var s Source = f.Source
+	var s WrappedSource = f.Source
 	var result []reflect.Value
 
 	result, s = s()

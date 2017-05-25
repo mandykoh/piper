@@ -17,7 +17,7 @@ func TestFlattenFormsCartesianProductOfMultipleReturnValues(t *testing.T) {
 	}
 	flattener := &flatten{source: projector.Source}
 
-	var s Source = flattener.Source
+	var s WrappedSource = flattener.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -94,7 +94,7 @@ func TestFlattenUnwrapsSlicesFromUnderlyingSource(t *testing.T) {
 	})}
 	flattener := &flatten{source: many.Source}
 
-	var s Source = flattener.Source
+	var s WrappedSource = flattener.Source
 	var result []reflect.Value
 
 	result, s = s()
@@ -151,7 +151,7 @@ func TestFlattenUsesRuntimeTypeToDetermineIndexables(t *testing.T) {
 	}
 	flattener := &flatten{source: projector.Source}
 
-	var s Source = flattener.Source
+	var s WrappedSource = flattener.Source
 	var result []reflect.Value
 
 	result, s = s()

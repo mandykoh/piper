@@ -24,5 +24,5 @@ func (s *single) Source() ([]reflect.Value, Source) {
 
 func FromSingle(itemValues ...interface{}) Pipe {
 	s := &single{values: itemValues}
-	return Pipe{Source: s.Source}
+	return From(s.Source)
 }

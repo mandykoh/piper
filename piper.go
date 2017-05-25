@@ -2,6 +2,10 @@ package piper
 
 import "reflect"
 
+func From(s Source) Pipe {
+	return Pipe{Source: s}
+}
+
 func convertToRuntimeType(value reflect.Value) reflect.Value {
 
 	if value.Kind() == reflect.Interface {

@@ -21,5 +21,5 @@ func (m *many) Source() ([]reflect.Value, Source) {
 
 func FromMany(items interface{}) Pipe {
 	m := &many{items: reflect.ValueOf(items)}
-	return Pipe{Source: m.Source}
+	return From(m.Source)
 }

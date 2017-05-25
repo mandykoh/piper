@@ -14,6 +14,10 @@ func (s projectedSource) Next() (values []reflect.Value, ok bool) {
 		return
 	}
 
+	for i := 0; i < len(values); i++ {
+		values[i] = reflect.ValueOf(values[i].Interface())
+	}
+
 	values = s.projection.Call(values)
 	return
 }

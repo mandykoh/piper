@@ -59,6 +59,20 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).
 // banana
 ```
 
+Make the above more readable using a helper partial function:
+
+```go
+func StringExcludes(s string) func(string) bool {
+  return func(v string) bool {
+    return !strings.Contains(v, s)
+  }
+}
+
+piper.FromIndexable([]string{ "apple", "pear", "banana" }).
+  Where(StringExcludes("e")).
+  To(fmt.Println)
+```
+
 Get each word and its length using a `Select` projection (note that the return type of the function passed to `Select` becomes the input to the next stage of the pipe):
 
 ```go

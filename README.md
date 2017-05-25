@@ -13,7 +13,7 @@ As Go doesn’t have generics, Piper is reflection based, and thus loses some st
 Trivially pipe a single value to `Println()`:
 
 ```go
-piper.From("Hello, World!").To(fmt.Println)
+piper.FromSingle("Hello, World!").To(fmt.Println)
 
 // Outputs:
 // Hello, World!
@@ -22,7 +22,7 @@ piper.From("Hello, World!").To(fmt.Println)
 Pipe a single value to `Printf()`:
 
 ```go
-piper.From("Hello, World!").To(func(s string) { fmt.Printf("%s\n", s) })
+piper.FromSingle("Hello, World!").To(func(s string) { fmt.Printf("%s\n", s) })
 
 // Outputs:
 // Hello, World!
@@ -31,7 +31,7 @@ piper.From("Hello, World!").To(func(s string) { fmt.Printf("%s\n", s) })
 Pipe a single pair of values to `Printf()` (note that the multiple values becomes the input to the next pipeline stage):
 
 ```go
-piper.From("Hello", "World").To(func(greeting, subject string) { fmt.Printf("%s, %s!\n", greeting, subject) })
+piper.FromSingle("Hello", "World").To(func(greeting, subject string) { fmt.Printf("%s, %s!\n", greeting, subject) })
 
 // Outputs:
 // Hello, World!
@@ -40,7 +40,7 @@ piper.From("Hello", "World").To(func(greeting, subject string) { fmt.Printf("%s,
 Stream a few values from a slice to `Println()`:
 
 ```go
-piper.FromIndexable([]string{ "apple", "pear", "banana" }).To(fmt.Println)
+piper.FromMany([]string{ "apple", "pear", "banana" }).To(fmt.Println)
 
 // Outputs:
 // apple
@@ -51,7 +51,7 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).To(fmt.Println)
 Exclude words containing the letter `e` using a `Where` filter:
 
 ```go
-piper.FromIndexable([]string{ "apple", "pear", "banana" }).
+piper.FromMany([]string{ "apple", "pear", "banana" }).
   Where(func(s string) bool { return !strings.Contains(s, "e") }).
   To(fmt.Println)
 
@@ -68,7 +68,7 @@ func StringExcludes(s string) func(string) bool {
   }
 }
 
-piper.FromIndexable([]string{ "apple", "pear", "banana" }).
+piper.FromMany([]string{ "apple", "pear", "banana" }).
   Where(StringExcludes("e")).
   To(fmt.Println)
 ```
@@ -76,7 +76,7 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).
 Get each word and its length using a `Select` projection (note that the return type of the function passed to `Select` becomes the input to the next stage of the pipe):
 
 ```go
-piper.FromIndexable([]string{ "apple", "pear", "banana" }).
+piper.FromMany([]string{ "apple", "pear", "banana" }).
   Select(func(s string) (string, int) { return s, len(s) }).
   To(func(s string, l int) { fmt.Printf("String: %s, Length: %d\n", s, l) })
 
@@ -89,7 +89,7 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).
 Decode a base64-encoded string using a `Select` projection with multiple return values:
 
 ```go
-piper.From("SGVsbG8sIFdvcmxkIQ==").
+piper.FromSingle("SGVsbG8sIFdvcmxkIQ==").
   Select(base64.StdEncoding.DecodeString).
   Where(func(decoded []byte, err error) bool { return err == nil }).
   Select(func(decoded []byte, err error) string { return string(decoded) }).
@@ -102,7 +102,7 @@ piper.From("SGVsbG8sIFdvcmxkIQ==").
 Get the upper and lower case version of each word using multiple projections with one `Select`:
 
 ```go
-piper.FromIndexable([]string{"apple", "pear", "banana"}).
+piper.FromMany([]string{"apple", "pear", "banana"}).
   Select(strings.ToUpper, strings.ToLower).
   To(func(s1, s2 string) { fmt.Printf("%s %s\n", s1, s2) })
 
@@ -115,7 +115,7 @@ piper.FromIndexable([]string{"apple", "pear", "banana"}).
 Turn a single slice or array value (eg a slice of words) into multiple values (eg a one-word-at-a-time stream) using a `Flatten` pipeline stage:
 
 ```go
-piper.From([]string{ "apple", "pear", "banana" }).
+piper.FromSingle([]string{ "apple", "pear", "banana" }).
   Flatten().
   To(fmt.Println)
 
@@ -128,7 +128,7 @@ piper.From([]string{ "apple", "pear", "banana" }).
 Combine a value with each word in a slice by `Flatten`ing:
 
 ```go
-piper.From("Hello", []string{ "apple", "pear", "banana" }).
+piper.FromSingle("Hello", []string{ "apple", "pear", "banana" }).
   Flatten().
   To(func(greeting, fruit string) { fmt.Printf("%s, %s\n!", greeting, fruit) })
 
@@ -145,7 +145,7 @@ sizes := []string{"small", "large"}
 colours := []string{"blue", "red", "green"}
 shapes := []string{"square", "circle", "triangle"}
 
-piper.From(sizes, colours, shapes).
+piper.FromSingle(sizes, colours, shapes).
   Flatten().
   To(func(size, colour, shape string) { fmt.Printf("%s %s %s\n", size, color, shape) })
 
@@ -161,7 +161,7 @@ piper.From(sizes, colours, shapes).
 Combine multiple pipeline stages for more complex processing:
 
 ```go
-piper.From([]Person{
+piper.FromSingle([]Person{
     {FirstName: "John", LastName: "Doe"},
     {FirstName: "Jane", LastName: "Dee"},
     {FirstName: "Bob", LastName: "Smith"},
@@ -189,7 +189,7 @@ func LengthLessThan(max int) func(s string) bool {
   }
 }
 
-piper.From([]Person{
+piper.FromSingle([]Person{
     {FirstName: "John", LastName: "Doe"},
     {FirstName: "Jane", LastName: "Dee"},
     {FirstName: "Bob", LastName: "Smith"},
@@ -209,7 +209,7 @@ func jsonProperty(name string) func(map[string]interface{}) interface{} {
   }
 }
 
-piper.From(jsonData).
+piper.FromSingle(jsonData).
   Select(jsonProperty("items")).
   Flatten().
   Select(jsonProperty("id"), jsonProperty("url")).

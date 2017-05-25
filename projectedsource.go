@@ -14,9 +14,7 @@ func (s projectedSource) Next() ([]reflect.Value, bool) {
 		return nil, false
 	}
 
-	for i := 0; i < len(values); i++ {
-		values[i] = reflect.ValueOf(values[i].Interface())
-	}
+	convertToRuntimeTypes(values)
 
 	var results []reflect.Value
 	for _, p := range s.projections {

@@ -28,9 +28,7 @@ func (p Pipe) To(sink interface{}) {
 			break
 		}
 
-		for i := 0; i < len(values); i++ {
-			values[i] = reflect.ValueOf(values[i].Interface())
-		}
+		convertToRuntimeTypes(values)
 		sinkFunc.Call(values)
 	}
 }

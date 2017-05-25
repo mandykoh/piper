@@ -72,6 +72,19 @@ piper.FromIndexable([]string{ "apple", "pear", "banana" }).
 // String: banana, Length: 6
 ```
 
+Get the upper and lower case version of each word using multiple projections with one `Select`:
+
+```go
+piper.FromIndexable([]string{"apple", "pear", "banana"}).
+  Select(strings.ToUpper, strings.ToLower).
+  To(func(s1, s2 string) { fmt.Printf("%s %s\n", s1, s2) })
+
+// Outputs:
+// APPLE apple
+// PEAR pear
+// BANANA banana
+```
+
 Turn a single slice or array value (eg a slice of words) into multiple values (eg a one-word-at-a-time stream) using a `Flatten` pipeline stage:
 
 ```go

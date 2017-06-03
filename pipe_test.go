@@ -2,6 +2,23 @@ package piper
 
 import "testing"
 
+func TestPipeAggregation(t *testing.T) {
+	var results []int
+
+	items := []int{1, 2, 3, 4}
+
+	FromMany(items).
+		Aggregate(0, func(total, n int) int { return total + n }).
+		To(func(n int) { results = append(results, n) })
+
+	if count := len(results); count != 1 {
+		t.Fatalf("Expected 1 element but got %d", count)
+	}
+	if results[0] != 10 {
+		t.Errorf("Expected value 10 but got %v", results[0])
+	}
+}
+
 func TestPipeCreationUsingCustomFunction(t *testing.T) {
 	var results []int
 

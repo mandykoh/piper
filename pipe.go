@@ -6,6 +6,11 @@ type Pipe struct {
 	Source WrappedSource
 }
 
+func (p Pipe) Aggregate(seed, aggregator interface{}) Pipe {
+	a := &aggregation{source: p.Source, seed: reflect.ValueOf(seed), aggregator: reflect.ValueOf(aggregator)}
+	return Pipe{Source: a.Source}
+}
+
 func (p Pipe) Flatten() Pipe {
 	f := &flatten{source: p.Source}
 	return Pipe{Source: f.Source}

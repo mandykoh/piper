@@ -135,6 +135,17 @@ piper.FromMany([]string{"apple", "pear", "banana"}).
 // BANANA banana
 ```
 
+Count items using an `Aggregate`:
+
+```go
+piper.FromMany([]string{ "apple", "pear", "banana" }).
+  Aggregate(0, func(total, item string) int { return total + 1 }).
+  To(fmt.Println)
+
+// Outputs:
+// 3
+```
+
 Turn a single slice or array value (eg a slice of words) into multiple values (eg a one-word-at-a-time stream) using a `Flatten` pipeline stage:
 
 ```go

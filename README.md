@@ -10,6 +10,8 @@ As Go doesn’t have generics, Piper is reflection based, and thus loses some st
 
 ## Examples
 
+### Sources
+
 Trivially pipe a single value to `Println()`:
 
 ```go
@@ -71,6 +73,8 @@ piper.From(countDown(3)).To(fmt.Println)
 // 0
 ```
 
+### Filtering
+
 Exclude words containing the letter `e` using a `Where` filter:
 
 ```go
@@ -95,6 +99,8 @@ piper.FromMany([]string{ "apple", "pear", "banana" }).
   Where(StringExcludes("e")).
   To(fmt.Println)
 ```
+
+### Projection
 
 Get each word and its length using a `Select` projection (note that the return type of the function passed to `Select` becomes the input to the next stage of the pipe):
 
@@ -135,6 +141,8 @@ piper.FromMany([]string{"apple", "pear", "banana"}).
 // BANANA banana
 ```
 
+### Aggregation
+
 Count items using an `Aggregate`:
 
 ```go
@@ -145,6 +153,8 @@ piper.FromMany([]string{ "apple", "pear", "banana" }).
 // Outputs:
 // 3
 ```
+
+### Flattening
 
 Turn a single slice or array value (eg a slice of words) into multiple values (eg a one-word-at-a-time stream) using a `Flatten` pipeline stage:
 
@@ -191,6 +201,8 @@ piper.FromSingle(sizes, colours, shapes).
 // small red circle
 // ...etc
 ```
+
+### More examples
 
 Combine multiple pipeline stages for more complex processing:
 

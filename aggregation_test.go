@@ -31,7 +31,7 @@ func TestAggregationConsumesSourceElements(t *testing.T) {
 	result, s = s()
 
 	if s != nil {
-		t.Fatal("Expected no more elements but got %v", result)
+		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }
 
@@ -58,6 +58,6 @@ func TestAggregationUsesRuntimeTypeOfElement(t *testing.T) {
 	result, s = s()
 
 	if s != nil {
-		t.Fatal("Expected no more elements but got %v", result)
+		t.Fatalf("Expected no more elements but got %v", result)
 	}
 }

@@ -1,5 +1,11 @@
 # piper
+
+[![GoDoc](https://godoc.org/github.com/mandykoh/piper?status.svg)](https://godoc.org/github.com/mandykoh/piper)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mandykoh/piper)](https://goreportcard.com/report/github.com/mandykoh/piper)
+[![Build Status](https://travis-ci.org/mandykoh/piper.svg?branch=master)](https://travis-ci.org/mandykoh/piper)
+
 Go library for lazily-evaluated pipeline processing.
+
 
 ## Introduction
 

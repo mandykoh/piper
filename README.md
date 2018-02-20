@@ -73,6 +73,9 @@ piper.From(countDown(3)).To(fmt.Println)
 // 0
 ```
 
+The source function must return a value and a function which produces the following value. If there is no value to return, `nil` should be returned in place of the function.
+
+
 ### Filtering
 
 Exclude words containing the letter `e` using a `Where` filter:

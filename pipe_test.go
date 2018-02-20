@@ -41,6 +41,16 @@ func TestPipeCreationUsingCustomFunction(t *testing.T) {
 	}
 }
 
+func TestPipeCreationUsingCustomFunctionWithNoResults(t *testing.T) {
+	var results []int
+
+	From(countDown(-1)).To(func(n int) { results = append(results, n) })
+
+	if count := len(results); count != 0 {
+		t.Fatalf("Expected no elements but got %d", count)
+	}
+}
+
 func TestPipeDraining(t *testing.T) {
 	var results []string
 
